@@ -1,7 +1,7 @@
 # Site settings
 title: zondie Blog
 SEOTitle: zondie | BY Blog
-header-img: img/post-bg-desk.jpg
+header-img: img/bg/cat.jpg
 email: zondie17@gmail.com
 description: "Every failure is leading towards success."
 keyword: "zondie, zondie Blog, zondie的博客, zondie17, zondie17 Blog"
@@ -12,7 +12,7 @@ github_repo: "https://github.com/zondie17/zondie17.github.io" # you code reposit
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "Goals determine what you going to be! zyw想保研"
-sidebar-avatar: /img/avatar_m.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/zondie.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
