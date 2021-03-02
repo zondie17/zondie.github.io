@@ -9,9 +9,7 @@ catalog: true
 tags:
     - ssh
     - VSCode
-	- CLion
-    
-
+    - CLion
 
 ---
 
