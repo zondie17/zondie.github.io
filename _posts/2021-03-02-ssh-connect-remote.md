@@ -71,7 +71,7 @@ Host anything
 
 最后效果如图：
 
-<img src="img/2021-03-02/3.jpg" alt="3" style="zoom:50%;" />
+<img src="../img/2021-03-02/3.jpg" />
 
 ## 远程无密码登陆
 
