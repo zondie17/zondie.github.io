@@ -39,7 +39,7 @@ ssh Username@Hostname -p Port
 
 比较简单的话直接添加配置即可，点击+即可。
 
-<img src="img/2021-03-02/1.jpg" style="zoom:50%;" />
+![](../img/2021-03-02/1.jpg)
 
 然后键入之前提到的
 
@@ -55,7 +55,7 @@ ssh Username@Hostname -p Port
 
 配置文件示例如下：
 
-<img src="img/2021-03-02/2.jpg" alt="2" style="zoom:50%;" />
+![](../img/2021-03-02/2.jpg)
 
 一般格式如下：
 
@@ -71,7 +71,7 @@ Host anything
 
 最后效果如图：
 
-![1](../img/2021-03-02/1.jpg)
+![1](../img/2021-03-02/3.jpg)
 
 ## 远程无密码登陆
 
