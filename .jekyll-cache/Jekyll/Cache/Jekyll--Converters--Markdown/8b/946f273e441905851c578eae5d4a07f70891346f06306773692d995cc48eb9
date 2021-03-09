@@ -1,0 +1,99 @@
+I"�"<h1 id="前言">前言</h1>
+
+<p>本篇是看到<code class="language-plaintext highlighter-rouge">mashplant</code>的一篇知乎文章https://www.zhihu.com/question/316026652/answer/625315615，在本机<code class="language-plaintext highlighter-rouge">mac</code>上跑了下他的代码之后发现出现了些问题：本机上<code class="language-plaintext highlighter-rouge">sizeof(string)</code>的数值固定为24…</p>
+
+<p>而我原来对<code class="language-plaintext highlighter-rouge">sizeof</code>便一直不是很清楚，恰好看到一篇还不错的博客，就据此整理下相关知识。</p>
+
+<p>参考博客：https://www.cnblogs.com/wanghetao/archive/2012/04/04/2431760.html</p>
+
+<h1 id="sizeof与sizeofstring">sizeof与sizeof(string)</h1>
+
+<p>经过查询资料得知，<code class="language-plaintext highlighter-rouge">sizeof(string)</code>返回的是<code class="language-plaintext highlighter-rouge">string</code>对象所占的空间，而非<code class="language-plaintext highlighter-rouge">string</code>所存储的字符串的大小。其实现在不同库中可能不同，但是在同一库下，无论<code class="language-plaintext highlighter-rouge">string</code>中存放多少字符串，其<code class="language-plaintext highlighter-rouge">sizeof()</code>都是固定的，<strong>字符串所占的空间是从栈中分配的</strong>（感觉和<code class="language-plaintext highlighter-rouge">Rust</code>中的<code class="language-plaintext highlighter-rouge">string</code>很像..），与<code class="language-plaintext highlighter-rouge">sizeof()</code>无关。</p>
+
+<p>经过测试，在本机如下版本中：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g++ <span class="nt">-v</span>
+Configured with: <span class="nt">--prefix</span><span class="o">=</span>/Applications/Xcode.app/Contents/Developer/usr <span class="nt">--with-gxx-include-dir</span><span class="o">=</span>/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/4.2.1
+Apple clang version 11.0.0 <span class="o">(</span>clang-1100.0.33.8<span class="o">)</span>
+Target: x86_64-apple-darwin19.3.0
+Thread model: posix
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">sizeof(string)</code>输出为24：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;  
+#include &lt;string&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span>
+	<span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">"a"</span><span class="p">;</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"size = %lu"</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">s</span><span class="p">));</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="关于更多sizeof的用法">关于更多sizeof的用法</h1>
+
+<h4 id="1-什么是sizeof">1. 什么是sizeof</h4>
+
+<p><code class="language-plaintext highlighter-rouge">sizeof</code>不是一个函数，网上有人说<code class="language-plaintext highlighter-rouge">sizeof</code>是一元操作符，但是似乎<code class="language-plaintext highlighter-rouge">sizeof</code>更像一个特殊的宏，它是在编译阶段求值的。</p>
+
+<p>两个有趣的case:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="mi">1</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">//1  </span>
+<span class="c1">// ==操作符返回bool类型，相当于cout &lt;&lt; sizeof(bool) &lt;&lt; endl</span>
+
+<span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">//4</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>				<span class="c1">//0</span>
+</code></pre></div></div>
+
+<p>由于<code class="language-plaintext highlighter-rouge">sizeof</code>再编译阶段处理的特性。<code class="language-plaintext highlighter-rouge">sizeof</code>不能被编译为机器码，在<code class="language-plaintext highlighter-rouge">sizeof</code>作用范围内，()内部的内容不会被编译，而是会被替换成类型。<code class="language-plaintext highlighter-rouge">=</code>操作符返回左操作数的类型，故而<code class="language-plaintext highlighter-rouge">a=3</code>相当于<code class="language-plaintext highlighter-rouge">int</code>，代码被替换为：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>事实上，哪怕是如下的代码：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="s">"hello world!"</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>…是不能跑通的，会有这个错误：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a.cpp:6:20: error: assigning to <span class="s1">'int'</span> from incompatible <span class="nb">type</span> <span class="s1">'const char [6]'</span>
+</code></pre></div></div>
+
+<p>所以可能只能里面的类型能够转换的时候才可以。。。</p>
+
+<h4 id="2-sizeof的用法">2. sizeof的用法</h4>
+
+<p>两种：</p>
+
+<ol>
+  <li>
+    <p>sizeof(object)</p>
+
+    <p>对于对象使用<code class="language-plaintext highlighter-rouge">sizeof</code>，也可以写成<code class="language-plaintext highlighter-rouge">sizeof object</code>形式。</p>
+  </li>
+  <li>
+    <p>sizeof(typename)</p>
+
+    <p>对于类型使用<code class="language-plaintext highlighter-rouge">sizeof</code>，必须加()。</p>
+  </li>
+</ol>
+
+<p>例如如下代码：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">//4</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">//4</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span> <span class="kt">int</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>	<span class="c1">// error: expected parentheses around type name in sizeof expression</span>
+</code></pre></div></div>
+
+<p>结论：最好都加<code class="language-plaintext highlighter-rouge">()</code>。</p>
+
+:ET

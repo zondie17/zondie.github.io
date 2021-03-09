@@ -1,0 +1,646 @@
+I"Ax<h1 id="第二章-项目eg">第二章 项目eg</h1>
+
+<p><code class="language-plaintext highlighter-rouge">crate</code>是一个rust代码包。</p>
+
+<p>我们正在构建的项目是一个<u>二进制crate</u>，它生成一个可执行文件。</p>
+
+<p><code class="language-plaintext highlighter-rouge">cargo.lock</code>文件确保构建是可重建的。</p>
+
+<p><code class="language-plaintext highlighter-rouge">let</code>、<code class="language-plaintext highlighter-rouge">match</code>、方法、关联函数、使用外部crate</p>
+
+<h1 id="第三章-语言基础">第三章 语言基础</h1>
+
+<h2 id="31-变量与可变性">3.1 变量与可变性</h2>
+
+<p><strong>变量与可变性</strong></p>
+
+<p>变量默认是不可改变的。</p>
+
+<p>若要可变，变量名前加<code class="language-plaintext highlighter-rouge">mut</code>。</p>
+
+<p><strong>变量和常量的区别</strong></p>
+
+<p>不循序对常量使用<code class="language-plaintext highlighter-rouge">mut</code>。常量不光默认不可变，它总是不能变的。</p>
+
+<p>声明常量使用关键字<code class="language-plaintext highlighter-rouge">const</code>而非<code class="language-plaintext highlighter-rouge">let</code>，并且必须注明值的类型。</p>
+
+<p>常量只能被设置为常量表达式，而不能是函数调用的结果。</p>
+
+<p>Rust常量的命名规范是使用下划线分割的大写字母单词，并且可以在数字字面值中插入下划线来提升可读性。</p>
+
+<p><strong>隐藏</strong></p>
+
+<p>可以定义一个与之前变量同名的新变量，而新变量会<strong>隐藏</strong>之前的变量。</p>
+
+<p>可以使用相同变量名称来隐藏一个变量，以及重复使用<code class="language-plaintext highlighter-rouge">let</code>来多次隐藏。</p>
+
+<p>当再次使用<code class="language-plaintext highlighter-rouge">let</code>时，实际上创建了一个新变量，我们可以改变值的类型，但复用这个名字。</p>
+
+<h2 id="32-数据类型">3.2 数据类型</h2>
+
+<p><strong>数据类型</strong></p>
+
+<p>两类数据类型子集：标量和复合。</p>
+
+<p><strong>Rust是静态类型语言。</strong></p>
+
+<ol>
+  <li>
+    <p>整形</p>
+
+    <p>整形溢出 依赖溢出被认为是一种错误。</p>
+  </li>
+  <li>
+    <p>浮点型</p>
+  </li>
+  <li>
+    <p>布尔类型</p>
+  </li>
+  <li>
+    <p>字符类型</p>
+  </li>
+</ol>
+
+<p>Rust的<code class="language-plaintext highlighter-rouge">char</code>类型代表了一个Unicode标量值，这意味着它可以比ASCII表示更多内容。</p>
+
+<p><strong>复合类型</strong></p>
+
+<p>可以讲多个值组合成一个类型。有两个原生的复合类型：元组和数组。</p>
+
+<p>Rust中的数组是固定长度的：一旦声明，长度不能增长或缩小。</p>
+
+<p>Rust会检查数组索引访问是否正确。</p>
+
+<h2 id="33-函数如何工作">3.3 函数如何工作</h2>
+
+<p><strong>函数</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">fn</code>用来声明新函数。</p>
+
+<p><strong>Rust代码中的函数和变量名规格风范：所有字母都是小写并使用下划线分割单词。</strong></p>
+
+<p>Rust中不关心函数定义位置。</p>
+
+<p><strong>函数参数</strong></p>
+
+<p>在函数签名中，必须声明每个参数的类型。</p>
+
+<p><strong>包含语句和表达式的函数体</strong></p>
+
+<p>Rust是一门给予表达式的语言。</p>
+
+<p>语句是执行一些操作但是不返回值的指令。表达式计算并产生一个值。</p>
+
+<p>函数调用是一个表达式，宏调用是一个表达式。</p>
+
+<p>如果在表达式的结尾加上分号，它就变成了语句，而语句不会返回值。</p>
+
+<p><strong>具有返回值的函数</strong></p>
+
+<h2 id="34-注释">3.4 注释</h2>
+
+<p>//</p>
+
+<h2 id="35-控制流">3.5 控制流</h2>
+
+<p><code class="language-plaintext highlighter-rouge">if</code>条件判断可以不加括号..另外必须总是显示地使用布尔值作为<code class="language-plaintext highlighter-rouge">if</code>的条件，不会尝试自动将非布尔值转换成布尔值。</p>
+
+<h1 id="第四章-认识所有权">第四章 认识所有权</h1>
+
+<p>所有权是Rust最独特的功能，它让Rust无需垃圾回收即可保障内存安全。</p>
+
+<h2 id="41-什么是所有权">4.1 什么是所有权</h2>
+
+<p>一些语言具有垃圾回收机制，在程序运行时不断的寻找不再使用的内存；在另一些语言中，程序员必须亲自分配和释放内存。Rust通过所有权系统管理内存，编译器在编译时会根据一系列的规则进行检查。</p>
+
+<p>跟踪哪部分代码正在使用堆上的哪些数据，最大限度的减少堆上的重复数据的数量，以及清理堆上不再使用的数据确保不会耗尽空间。这些问题正是所有权系统要处理的。一旦理解了所有权，你就不需要经常考虑堆和栈了，不过明白了所有权的存在就是为了管理堆数据，能够帮助解释为什么所有权要以这种方式工作。</p>
+
+<ul>
+  <li>
+    <p>所有权规则</p>
+
+    <ol>
+      <li>Rust中的每个值都有一个被称为所有者的变量。</li>
+      <li>值有且只有一个所有者。</li>
+      <li>当所有者（变量）离开作用域，这个值将被丢弃。</li>
+    </ol>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">String</code>类型</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Rust</code>语言提供了两种字符串</p>
+
+    <ol>
+      <li>字符串字面量<code class="language-plaintext highlighter-rouge">&amp;str</code>，是<code class="language-plaintext highlighter-rouge">Rust</code>核心内置的数据类型</li>
+      <li>字符串对象<code class="language-plaintext highlighter-rouge">String</code>。不是<code class="language-plaintext highlighter-rouge">Rust</code>核心的一部分，只是<code class="language-plaintext highlighter-rouge">Rust</code>标准库中的一个公开<code class="language-plaintext highlighter-rouge">pub</code>结构体。</li>
+    </ol>
+  </li>
+  <li>
+    <p>变量与数据交互的方式（一）：移动</p>
+
+    <div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="n">s1</span> <span class="o">=</span> <span class="nn">String</span><span class="p">::</span><span class="nf">from</span><span class="p">(</span><span class="s">"hello"</span><span class="p">);</span>
+<span class="k">let</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p>只是拷贝了栈上的指针、长度和容量，没有复制指针指向栈上数据。</p>
+
+    <p>当<code class="language-plaintext highlighter-rouge">s2</code>、<code class="language-plaintext highlighter-rouge">s1</code>离开作用域时，会尝试释放相同的内存，这是一个叫做==二次释放==的错误。</p>
+
+    <p>在<code class="language-plaintext highlighter-rouge">s2</code>被创建之后，<code class="language-plaintext highlighter-rouge">s1</code>被认为是不再有效的，只有<code class="language-plaintext highlighter-rouge">s2</code>是有效的，则离开作用域时，它就释放自己的内存。</p>
+
+    <p>又被称为浅拷贝。</p>
+  </li>
+  <li>
+    <p>变量与数据交互的方式（一）：克隆</p>
+
+    <p>深拷贝使用<code class="language-plaintext highlighter-rouge">clone</code>函数。</p>
+  </li>
+  <li>
+    <p>只在栈上的数据：拷贝</p>
+
+    <p>编译时已知大小的数据被整个存储在栈上，其没有深浅拷贝的区别，不会无效。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Copy</code>类型：</p>
+
+    <ul>
+      <li>所有整数类型，如<code class="language-plaintext highlighter-rouge">u32</code></li>
+      <li>布尔类型</li>
+      <li>所有浮点数类型</li>
+      <li>字符类型</li>
+      <li>元组，当且仅当其包含的类型也都是<code class="language-plaintext highlighter-rouge">Copy</code>的时候</li>
+    </ul>
+  </li>
+  <li>
+    <p>所有权与函数</p>
+
+    <p>向函数传递值可能会移动或者复制。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">String</code>移动到函数中之后，在函数之后<code class="language-plaintext highlighter-rouge">String</code>不再有效。</p>
+
+    <p>而<code class="language-plaintext highlighter-rouge">Copy</code>类型则不受影响。</p>
+  </li>
+  <li>
+    <p>返回值与作用域</p>
+
+    <p>返回值也可以转移所有权。</p>
+  </li>
+</ul>
+
+<h2 id="42-引用与借用">4.2 引用与借用</h2>
+
+<p>&amp;符号就是引用，允许使用值但不获取所有权。</p>
+
+<p>引用离开作用域后并不丢弃它指向的数据，因为没有所有权。</p>
+
+<p>我们将获取引用作为函数参数称为借用。</p>
+
+<ul>
+  <li>
+    <p>可变引用</p>
+
+    <p>在特定作用域的特定数据有且只有一个可变引用。</p>
+
+    <p>可以在编译时就避免数据竞争。</p>
+
+    <p>数据竞争：</p>
+
+    <ul>
+      <li>两个或更多指针同时访问同一数据</li>
+      <li>至少有一个指针被用来写入数据</li>
+      <li>没有同步数据访问的机制</li>
+    </ul>
+
+    <p>可以用大括号来创建一个新的作用域，以便拥有多个可变引用。</p>
+
+    <p>不能在拥有不可变引用的同时拥有可变引用。</p>
+  </li>
+  <li>
+    <p>垂悬引用</p>
+
+    <p>垂悬指针是指其指向的内存可能已经被分配给其他持有者。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">rust</code>编译器确保数据不会在其引用之前离开作用域。</p>
+  </li>
+  <li>
+    <p>引用的规则</p>
+
+    <ul>
+      <li>在任意给定时间，要么只能有一个可变引用，要么只能有多个不可变引用</li>
+      <li>引用必须总是有效的</li>
+    </ul>
+
+    <p>==有点神奇的是==</p>
+
+    <p>事实上，在访问这些引用之前，编译器对于引用的规则似乎是不加限制的，即可以同时存在多个可变引用或多个可变引用夹杂多个不可变引用的情况，只要不访问这些引用。甚至于说，只要访问最后一个类型的第一个引用都是被允许的。。即若<code class="language-plaintext highlighter-rouge">A</code>表示可变引用，<code class="language-plaintext highlighter-rouge">B</code>表示不可变引用时；</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AAAABBBAAABBAAABAABAAA
+</code></pre></div>    </div>
+
+    <p>这种情况时，访问倒数第三个<code class="language-plaintext highlighter-rouge">A</code>都是被允许的。应当也可以理解，在这种情况下，之前所有引用没有被访问过，也就没有了数据出现同时访问/修改的危险。不过于此对应的是，一个函数如果出现<code class="language-plaintext highlighter-rouge">dangling reference</code>类似情况但并没有被引用过时，都不能被编译器通过。这两者区别是什么？</p>
+  </li>
+</ul>
+
+<h2 id="43-slices">4.3 Slices</h2>
+
+<p>另一个没有所有权的数据类型是<code class="language-plaintext highlighter-rouge">slice</code></p>
+
+<p>字符串<code class="language-plaintext highlighter-rouge">slice</code>是<code class="language-plaintext highlighter-rouge">String</code>中一部分值的引用</p>
+
+<ul>
+  <li>字符串字面值就是<code class="language-plaintext highlighter-rouge">slice</code></li>
+  <li>其他类型的<code class="language-plaintext highlighter-rouge">slice</code></li>
+</ul>
+
+<h1 id="第五章-使用结构体来组织相关联的数据">第五章 使用结构体来组织相关联的数据</h1>
+
+<h2 id="51-定义并实例化结构体">5.1 定义并实例化结构体</h2>
+
+<p>定义结构体，需要使用<code class="language-plaintext highlighter-rouge">struct</code>关键字并为整个结构体提供一个名字。</p>
+
+<p>通过为<strong>每个</strong>字段指定具体值来创建结构体的实例。</p>
+
+<p><code class="language-plaintext highlighter-rouge">rust</code>不允许只将某个字段标记为可变。</p>
+
+<ul>
+  <li>
+    <p>结构体更新语法</p>
+  </li>
+  <li>
+    <p>使用没有命名字段的元祖结构体来创建不同的类型</p>
+
+    <p>与元组类似的结构体，元组结构体。</p>
+  </li>
+  <li>
+    <p>没有任何字段的类单元结构体</p>
+
+    <p>没有任何字段的结构体，称为类单元结构体。常常在你想要在某个类型上实现<code class="language-plaintext highlighter-rouge">trait</code>但不需要在类型中存储数据的时候发挥作用。</p>
+  </li>
+</ul>
+
+<h2 id="52-一个使用结构体的事例程序">5.2 一个使用结构体的事例程序</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Rust</code>包含了打印出调试信息的功能，不过必须为结构体显示选择这个功能。为此， 在结构体定义之前加上<code class="language-plaintext highlighter-rouge">#[derive(Debug)]</code>注解。</p>
+
+<p>另外打印时，用<code class="language-plaintext highlighter-rouge">{:?}</code>或<code class="language-plaintext highlighter-rouge">{:#?}</code>。</p>
+
+<h2 id="53-方法语法">5.3 方法语法</h2>
+
+<p>方法在结构体的上下文中被定义，并且它们的第一个参数总是<code class="language-plaintext highlighter-rouge">self</code>，表示调用该方法的结构体事例。</p>
+
+<ul>
+  <li>
+    <p>定义方法</p>
+
+    <p>通过仅仅使用<code class="language-plaintext highlighter-rouge">self</code>作为第一个参数来使用方法获取实例的所有权是很少见的；这种技术通常用在当方法将<code class="language-plaintext highlighter-rouge">self</code>转换成别的实例的时候，这时我们想要防止调用者在转换之后使用原始的实例。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Rust</code>有一个叫<strong><u>自动引用和解引用</u></strong>的功能。方法调用是<code class="language-plaintext highlighter-rouge">Rust</code>中少数几个拥有这种行为的地方。</p>
+
+    <p>他是这样工作的：当使用 <code class="language-plaintext highlighter-rouge">object.something()</code> 调用方法时，Rust 会自动为 <code class="language-plaintext highlighter-rouge">object</code>添加 <code class="language-plaintext highlighter-rouge">&amp;</code>、<code class="language-plaintext highlighter-rouge">&amp;mut</code> 或 <code class="language-plaintext highlighter-rouge">*</code> 以便使 <code class="language-plaintext highlighter-rouge">object</code> 与方法签名匹配。</p>
+  </li>
+  <li>
+    <p>带有更多参数的方法</p>
+
+    <p>第一个参数是<code class="language-plaintext highlighter-rouge">&amp;self</code>，后面的和函数类似</p>
+  </li>
+  <li>
+    <p>关联函数</p>
+
+    <p><code class="language-plaintext highlighter-rouge">impl</code>块另外允许在块中定义不以<code class="language-plaintext highlighter-rouge">self</code>作为参数的函数。这被称为关联函数，因为它们与结构体相关联，他们仍是函数而不是方法，因为它们并不作用于一个结构体的实例。</p>
+
+    <p>使用结构体名和<code class="language-plaintext highlighter-rouge">::</code>语法来调用关联函数。其位于结构体的命名空间中：<code class="language-plaintext highlighter-rouge">::</code>语法用于关联函数和模块创建的空间。</p>
+
+    <p>将特定函数置于结构体的命名空间中并且无需一个实例。</p>
+  </li>
+  <li>
+    <p>多个<code class="language-plaintext highlighter-rouge">impl</code>块</p>
+  </li>
+</ul>
+
+<h1 id="第六章-枚举与模式匹配">第六章 枚举与模式匹配</h1>
+
+<p>枚举，也被称为<code class="language-plaintext highlighter-rouge">enums</code>。</p>
+
+<h2 id="61-定义枚举">6.1 定义枚举</h2>
+
+<p>枚举可以把一群不同的结构体糅合在一起。</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Option</code>枚举和其相对于空值的优势</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Option</code>是标准库定义的另一个枚举，即一个值要么有值要么没值。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">Rust</code>并没有很多其他语言中有的空值功能。空值是一个值，它代表没有值</p>
+
+    <p>不再担心会错误的假设一个非空值</p>
+  </li>
+</ul>
+
+<h2 id="62-match控制流运算符">6.2 <code class="language-plaintext highlighter-rouge">match</code>控制流运算符</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">match</code>控制流运算符</p>
+  </li>
+  <li>
+    <p>绑定值的模式</p>
+
+    <p>匹配分支的另一个有用的功能是可以绑定匹配的模式的部分值。</p>
+  </li>
+  <li>
+    <p>匹配<code class="language-plaintext highlighter-rouge">Option</code></p>
+  </li>
+  <li>
+    <p>匹配<code class="language-plaintext highlighter-rouge">Some(T)</code></p>
+
+    <p>将<code class="language-plaintext highlighter-rouge">match</code>与枚举相结合在很多场景中都是有用的。</p>
+
+    <p><code class="language-plaintext highlighter-rouge">match</code>一个枚举，绑定其中的值到一个变量，接着根据其值执行代码。</p>
+  </li>
+  <li>
+    <p>匹配是穷尽的</p>
+
+    <p>必须穷举到最后的可能性来使代码有效。</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">_</code>通配符</p>
+
+    <p>（我感觉类似于<code class="language-plaintext highlighter-rouge">switch</code>里的<code class="language-plaintext highlighter-rouge">default</code>）</p>
+
+    <p><code class="language-plaintext highlighter-rouge"> _ </code>模式会匹配所有的值。通过将其放置于其他分支之后，<code class="language-plaintext highlighter-rouge">_</code>将会匹配所有之前没有指定的可能的值。</p>
+  </li>
+</ul>
+
+<h2 id="63-if-let简介控制流">6.3 <code class="language-plaintext highlighter-rouge">if let</code>简介控制流</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">if let</code>简单控制流</p>
+
+    <p>工作方式与<code class="language-plaintext highlighter-rouge">match</code>相同，可以认为<code class="language-plaintext highlighter-rouge">if let</code>是<code class="language-plaintext highlighter-rouge">match</code>的一个语法糖，它当值匹配某一模式时执行代码而忽略所有其他值。</p>
+  </li>
+  <li>
+    <p>总结</p>
+
+    <p>现在我们涉及到了如何使用枚举来创建有一系列可列举值的自定义类型。我们也展示了标准库的 <code class="language-plaintext highlighter-rouge">Option</code> 类型是如何帮助你利用类型系统来避免出错的。当枚举值包含数据时，你可以根据需要处理多少情况来选择使用 <code class="language-plaintext highlighter-rouge">match</code> 或 <code class="language-plaintext highlighter-rouge">if let</code> 来获取并使用这些值。</p>
+
+    <p>你的 Rust 程序现在能够使用结构体和枚举在自己的作用域内表现其内容了。在你的 API 中使用自定义类型保证了类型安全：编译器会确保你的函数只会得到它期望的类型的值。</p>
+  </li>
+</ul>
+
+<h1 id="第七章-包管理">第七章 包管理</h1>
+
+<h2 id="70-包crate与模块">7.0 包、<code class="language-plaintext highlighter-rouge">crate</code>与模块</h2>
+
+<h2 id="71-包和crate用来创建库和二进制项目">7.1 包和crate用来创建库和二进制项目</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">crate</code>是一个二进制或库项目</li>
+  <li><code class="language-plaintext highlighter-rouge">crate</code>根是一个用来描述如何构建<code class="language-plaintext highlighter-rouge">crate</code>的文件</li>
+  <li>带有<code class="language-plaintext highlighter-rouge">Cargo.toml</code>文件的包用以描述如何构建一个或多个<code class="language-plaintext highlighter-rouge">crate</code>。一个包中至多可以有一个库项目。</li>
+</ul>
+
+<h2 id="72-模块系统用来控制作用域和私有性">7.2 模块系统用来控制作用域和私有性</h2>
+
+<ul>
+  <li>
+    <p>路径用来引用模块树中的项</p>
+
+    <ul>
+      <li>
+        <p>绝对路径</p>
+
+        <p>从<code class="language-plaintext highlighter-rouge">crate</code>根开始，以<code class="language-plaintext highlighter-rouge">crate</code>名或者字面值<code class="language-plaintext highlighter-rouge">crate</code>开头。</p>
+      </li>
+      <li>
+        <p>相对路径</p>
+
+        <p>从当前模块开始，以<code class="language-plaintext highlighter-rouge">self</code>、<code class="language-plaintext highlighter-rouge">super</code>或当前模块的标识符开头。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>模块作为私有性的边界</p>
+
+    <ul>
+      <li>所有项（函数、方法、结构体、枚举、模块和常量）默认是私有的</li>
+      <li>可以使用<code class="language-plaintext highlighter-rouge">pub</code>关键字使项变共有</li>
+      <li>不允许使用定义于当前模块的自模块中的私有代码</li>
+      <li>允许使用任何定义于父模块或当前模块中的代码</li>
+    </ul>
+  </li>
+  <li>
+    <p>使用<code class="language-plaintext highlighter-rouge">pub</code>关键字使项变为公有</p>
+  </li>
+  <li>
+    <p>使用<code class="language-plaintext highlighter-rouge">super</code>开始相对路径</p>
+  </li>
+  <li>
+    <p>对结构体和枚举使用<code class="language-plaintext highlighter-rouge">pub</code></p>
+
+    <p>在结构体定义中使用<code class="language-plaintext highlighter-rouge">pub</code>，可以使结构体公有，但是结构体的字段仍然是私有的。</p>
+
+    <p>相反，如果有一个公有枚举，其所有成员都是公有。</p>
+  </li>
+  <li>
+    <p>使用<code class="language-plaintext highlighter-rouge">use</code>关键字将名称引入作用域</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">use</code>函数路径使用习惯VS其他项</p>
+
+    <p>对于函数来说，通过<code class="language-plaintext highlighter-rouge">use</code>制定函数的父模块接着制定父模块来调用方法被认为是习惯用法。</p>
+
+    <p>对于结构体、枚举和其他项，通过<code class="language-plaintext highlighter-rouge">use</code>指定项的全路径是习惯用法。</p>
+  </li>
+  <li>
+    <p>通过<code class="language-plaintext highlighter-rouge">as</code>关键字重命名引入作用域的类型</p>
+
+    <p>将两个同名类型引入作用域的一个解决方法：在<code class="language-plaintext highlighter-rouge">use</code>后加上<code class="language-plaintext highlighter-rouge">as</code>和另一个新名称来为此类型制定一个新的本地名称。</p>
+  </li>
+  <li>
+    <p>通过<code class="language-plaintext highlighter-rouge">pub use</code>重导出名称</p>
+
+    <p>当使用<code class="language-plaintext highlighter-rouge">use</code>关键字将名称导入作用域时，在新作用域中可用的名称是私有的。如果希望调用你编写的代码的代码能够像你一样在其作用域内引用这些类型，可以用重导出<code class="language-plaintext highlighter-rouge">pub use</code></p>
+  </li>
+  <li>
+    <p>使用外部包</p>
+
+    <p>标准库(<code class="language-plaintext highlighter-rouge">std</code>)对于你的包来说也是外部<code class="language-plaintext highlighter-rouge">crate</code>。</p>
+  </li>
+  <li>
+    <p>嵌套路径来消除大量的<code class="language-plaintext highlighter-rouge">use</code>行</p>
+  </li>
+  <li>
+    <p>通过<code class="language-plaintext highlighter-rouge">glob</code>运算符将所有的公有定义引入作用域</p>
+  </li>
+  <li>
+    <p>将模块分割进不同文件</p>
+  </li>
+</ul>
+
+<h1 id="第八章-集合">第八章 集合</h1>
+
+<h2 id="80-通用集合类型">8.0 通用集合类型</h2>
+
+<ol>
+  <li>vector</li>
+  <li>字符串string</li>
+  <li>哈希map</li>
+</ol>
+
+<h2 id="81-vector用来存储一系列的值">8.1 vector用来存储一系列的值</h2>
+
+<ul>
+  <li>
+    <p>新建vector</p>
+
+    <p><code class="language-plaintext highlighter-rouge">vec！</code>宏，根据提供的值来创建一个新的<code class="language-plaintext highlighter-rouge">Vec</code>。</p>
+  </li>
+  <li>
+    <p>更新vector</p>
+
+    <p><code class="language-plaintext highlighter-rouge">mut</code></p>
+  </li>
+  <li>
+    <p>丢弃vector时也会丢弃其所有元素</p>
+  </li>
+  <li>
+    <p>读取vector的元素</p>
+
+    <p>有两种方法引用vector中存储的值。</p>
+
+    <ul>
+      <li>使用<code class="language-plaintext highlighter-rouge">&amp;</code>和<code class="language-plaintext highlighter-rouge">[]</code>来返回一个引用</li>
+      <li>使用<code class="language-plaintext highlighter-rouge">get</code>方法以索引作为参数来返回一个<code class="language-plaintext highlighter-rouge">Option&lt;&amp;T&gt;</code></li>
+    </ul>
+
+    <p>程序可以选择如何处理当索引值在vector中没有对应值的情况。</p>
+
+    <p>作用域中不能同时存在可变和不可变引用，故而获取来vector一个元素的同时是不能给其添加元素的。</p>
+
+    <p>vector的工作方式：在vector的结尾增加新元素时，在没有足够空间将所有元素依次相邻存放的时候，可能会要求分配新内存并将老的元素拷贝到新的空间中。这样的话上述中提到的不可变引用就指向了被释放的内存。</p>
+  </li>
+  <li>
+    <p>遍历vector中的元素</p>
+  </li>
+  <li>
+    <p>使用枚举来存储多种类型</p>
+
+    <p>创建一个存储枚举值的vector，就能存储不同类型的值了。</p>
+  </li>
+</ul>
+
+<h2 id="82-使用字符串存储utf-8编码的文本">8.2 使用字符串存储UTF-8编码的文本</h2>
+
+<ul>
+  <li>
+    <p>什么是字符串</p>
+
+    <p>提到<code class="language-plaintext highlighter-rouge">rust</code>的字符串时，通常指的是<code class="language-plaintext highlighter-rouge">String</code>会让字符串slicr<code class="language-plaintext highlighter-rouge">&amp;str</code>类型，而不仅仅是其中之一。</p>
+  </li>
+  <li>
+    <p>新建字符串</p>
+
+    <p>可以使用<code class="language-plaintext highlighter-rouge">to_string</code>方法，能用于任何实现了<code class="language-plaintext highlighter-rouge">Display</code>trait的类型。</p>
+  </li>
+  <li>
+    <p>更新字符串</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">push_str</code>方法获取字符串slice，不需要获取参数的所有权。</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">push</code>方法被定义为获取一个单独的字符作为参数。</p>
+      </li>
+      <li>
+        <p>使用<code class="language-plaintext highlighter-rouge">+</code>运算符</p>
+
+        <p>之所以能够在<code class="language-plaintext highlighter-rouge">add</code>调用中使用<code class="language-plaintext highlighter-rouge">&amp;s2</code>是因为<code class="language-plaintext highlighter-rouge">&amp;String</code>可以被强制成<code class="language-plaintext highlighter-rouge">&amp;str</code>。当<code class="language-plaintext highlighter-rouge">add</code>函数被调用时，<code class="language-plaintext highlighter-rouge">Rust</code>使用了一个被称为解引用强制多态的技术。</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">format</code>宏</p>
+
+        <p>不会获取任何参数的所有权</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>索引字符串</p>
+
+    <p>在很多语言中，通过索引来引用字符串中的单独字符是有效且常见的操作。</p>
+
+    <p>但在<code class="language-plaintext highlighter-rouge">rust</code>中是不成的..</p>
+  </li>
+  <li>
+    <p>内部表现</p>
+
+    <p><code class="language-plaintext highlighter-rouge">String</code>是一个<code class="language-plaintext highlighter-rouge">Vec&lt;u8&gt;</code>的封装。其中存储的是<code class="language-plaintext highlighter-rouge">UTF-8</code>编码。而一个<code class="language-plaintext highlighter-rouge">Unicode</code>标量值需要两个字节存储，但一个英文字母只要一个字节。</p>
+  </li>
+  <li>
+    <p>字节、标量值和字形簇</p>
+
+    <p>三种相关方式理解字符串。</p>
+  </li>
+  <li>
+    <p>字符串<code class="language-plaintext highlighter-rouge">slice</code></p>
+  </li>
+  <li>
+    <p>遍历字符串的方法</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">"hello".chars()</code></li>
+      <li><code class="language-plaintext highlighter-rouge">"hello".bytes()</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>字符串并不简单</p>
+
+    <p>程序员们必须更多的思考如何预先处理UTF-8数据。</p>
+  </li>
+</ul>
+
+<h2 id="83-哈希map">8.3 哈希map</h2>
+
+<ul>
+  <li>
+    <p>哈希map储存键值对</p>
+
+    <p><code class="language-plaintext highlighter-rouge">HashMap&lt;K, V&gt;</code></p>
+  </li>
+  <li>
+    <p>新建一个哈希map</p>
+  </li>
+  <li>
+    <p>哈希map和所有权</p>
+
+    <p>一旦键值对被插入后就称为哈希map所拥有</p>
+  </li>
+  <li>
+    <p>更新哈希map</p>
+
+    <ul>
+      <li>覆盖 直接插入</li>
+      <li>只在键没有对应值的时候插入 <code class="language-plaintext highlighter-rouge">entry</code></li>
+      <li>根据旧值更新一个值</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="第九章-错误处理">第九章 错误处理</h1>
+
+<h2 id="91-panic与不可恢复的错误">9.1 <code class="language-plaintext highlighter-rouge">panic!</code>与不可恢复的错误</h2>
+
+<p>painc程序默认会展开，即<code class="language-plaintext highlighter-rouge">Rust</code>回溯栈并清理所遇到的每一个函数的数据；另一种可以直接终止，不清理数据就推出数据。</p>
+
+<ul>
+  <li>使用<code class="language-plaintext highlighter-rouge">panic!</code>的backtrace</li>
+</ul>
+
+<h2 id="92-result与可恢复的错误">9.2 <code class="language-plaintext highlighter-rouge">Result</code>与可恢复的错误</h2>
+
+<p><code class="language-plaintext highlighter-rouge">unwrap</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">expect</code></p>
+
+:ET
