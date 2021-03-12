@@ -1,0 +1,42 @@
+I"
+<h2 id="前言">前言</h2>
+
+<p>最近在做毕设，要在服务器上修改fft代码，然后在本地VSCode上修改代码的时候，总是会莫名其妙的报错，感觉很迷，于是调试(魔改)了下，然后好了…在这里记录下，倒不一定是之后会用到经验，只是万一改崩了能想起来是改了哪…</p>
+
+<hr />
+
+<h2 id="解决方案">解决方案</h2>
+
+<p>未修改时，显示语法高亮错误，但能够成功编译，报错如下图：</p>
+
+<p><img src="https://zondie17.github.io/img/2021-03-12/1.jpg" alt="" /></p>
+
+<p>之后查看<a href="https://stackoverflow.com/questions/47429752/visual-studio-code-syntax-highlighting-shows-errors-but-compiles">Visual Studio Code Syntax Highlighting shows errors but compiles</a>问题，得到解决办法</p>
+
+<blockquote>
+  <p>Setting the <code class="language-plaintext highlighter-rouge">"C_Cpp.intelliSenseMode": "Tag Parser"</code> in the <code class="language-plaintext highlighter-rouge">settings.json</code> does the trick.</p>
+</blockquote>
+
+<p>具体来说，我是在这个项目<code class="language-plaintext highlighter-rouge">./.vscode</code>路径下修改了<code class="language-plaintext highlighter-rouge">settings.json</code>，另外通过<code class="language-plaintext highlighter-rouge">command+shift+p</code>直接键入<code class="language-plaintext highlighter-rouge">settings.json</code>也可找到，直接添加一句，修改如下：</p>
+
+<p><img src="https://zondie17.github.io/img/2021-03-12/2.jpg" alt="" /></p>
+
+<p>即可，之后问题解决。</p>
+
+<p>另外，搜索得到如下解释：</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">browse</code> The set of properties used when <code class="language-plaintext highlighter-rouge">"C_Cpp.intelliSenseEngine"</code> is set to <code class="language-plaintext highlighter-rouge">"Tag Parser"</code>(also referred to as “fuzzy” IntelliSense, or the “browse” engine). These properties are also used by the Go To Definition/Declaration features, or when the “Default” IntelliSense engine is unable to resolve the #includes in your source files.</p>
+</blockquote>
+
+<p>来自<a href="https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference">c_cpp_properties.json reference</a> .</p>
+
+<hr />
+
+<h2 id="others">Others</h2>
+
+<p>另外可以修改右下角从右向左第四个显示<code class="language-plaintext highlighter-rouge">C</code>的地方，修改语言模式。</p>
+
+<p><img src="https://zondie17.github.io/img/2021-03-12/3.jpg" alt="" /></p>
+
+:ET

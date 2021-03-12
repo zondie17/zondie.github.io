@@ -12,11 +12,13 @@ tags:
 
 ---
 
-# 前言
+## 前言
 
 最近在做毕设，要在服务器上修改fft代码，然后在本地VSCode上修改代码的时候，总是会莫名其妙的报错，感觉很迷，于是调试(魔改)了下，然后好了...在这里记录下，倒不一定是之后会用到经验，只是万一改崩了能想起来是改了哪...
 
-# 解决方案
+***
+
+## 解决方案
 
 未修改时，显示语法高亮错误，但能够成功编译，报错如下图：
 
@@ -38,8 +40,11 @@ tags:
 
 来自[c_cpp_properties.json reference](https://code.visualstudio.com/docs/cpp/c-cpp-properties-schema-reference) .
 
+***
+
 ## Others
 
 另外可以修改右下角从右向左第四个显示`C`的地方，修改语言模式。
 
 ![](https://zondie17.github.io/img/2021-03-12/3.jpg)
+
