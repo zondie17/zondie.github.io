@@ -41,3 +41,5 @@ tags:
 ## Others
 
 另外可以修改右下角从右向左第四个显示`C`的地方，修改语言模式。
+
+![](https://zondie17.github.io/img/2021-03-12/3.jpg)
