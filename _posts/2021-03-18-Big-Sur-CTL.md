@@ -8,8 +8,8 @@ header-img: img/2021-03-18/bg.jpg
 catalog: true
 tags:
     - mac
-	- macOS
-	- Big Sur
+    - macOS
+    - Big Sur
 
 
 

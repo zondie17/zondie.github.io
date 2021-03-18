@@ -1,0 +1,29 @@
+I"<h2 id="前言">前言</h2>
+
+<p>前几天把mac系统更新了下，更新之后感觉出了好多bug..也似乎变慢了，中间某些软件还出现了崩溃的情况，如Docker，只能卸掉，但比较麻烦的是CTL(CommandLineTools)似乎出现了问题，如<code class="language-plaintext highlighter-rouge">git</code>,<code class="language-plaintext highlighter-rouge">gcc</code>等工具都不能用了，搜索了下找到了个解决方案。但不明觉厉，于是先记录下…</p>
+
+<hr />
+
+<h2 id="解决方案">解决方案</h2>
+
+<p>默认时，<code class="language-plaintext highlighter-rouge">xcode-select</code>的路径为<code class="language-plaintext highlighter-rouge">/Applications/Xcode.app/Contents/Developer</code>，这在更新后使用原来的工具时会出现问题，如下：</p>
+
+<p><img src="https://zondie17.github.io/img/2021-03-18/1.jpg" alt="" /></p>
+
+<p>但实际上点击安装后还是无法使用，会出现下载一段时间后无法安装的情况，再次不多赘述。</p>
+
+<p>之后查看<a href="https://developer.apple.com/forums/thread/666584">After upgrade to Big Sur git stopped working</a>问题，得到解决办法</p>
+
+<blockquote>
+  <p>I was having the same issue.
+I managed to get it fixed by running</p>
+
+  <p><code class="language-plaintext highlighter-rouge">sudo xcode-select -switch /Library/Developer/CommandLineTools</code></p>
+</blockquote>
+
+<p>如回答中所述，在命令行输入上述命令，之后问题即可解决：</p>
+
+<p><img src="https://zondie17.github.io/img/2021-03-18/2.jpg" alt="" /></p>
+
+<p>可见此时<code class="language-plaintext highlighter-rouge">gcc</code>已可成功使用，另外路径变为了<code class="language-plaintext highlighter-rouge">/Library/Developer/CommandLineTools</code>。</p>
+:ET
