@@ -15,6 +15,10 @@ tags:
 
 ---
 
+<script type="text/x-mathjax-config">   MathJax.Hub.Config({     tex2jax: {       inlineMath: [ ['$','$'], ["\\(","\\)"] ],       processEscapes: true     }   }); </script>
+
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
 ## 前言
 
 最近看壁纸，感觉白天的Big Sur太亮，晚上又无生趣；傍晚时似乎很美，但在它的路径`/System/Library/Desktop Pictures`下又找不到`heic`格式的图片，在网上搜索只能找到$6016\times6016$格式的`jpg`文件...
