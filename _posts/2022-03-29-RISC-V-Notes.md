@@ -54,7 +54,7 @@ tags:
 另外在代码区，`SAVE_REGS_RISCV64`之前将栈上的内容读入到对应寄存器中：
 
 ```assembly
-lw      butterfly_num, 0(sp)
+lw      		butterfly_num, 0(sp)
 ```
 
 ## Illegal Instruction
@@ -90,9 +90,9 @@ vfnmsub.vv		vd, vs1, vs2
 确实，risc-v里不仅只有这个乘累减取负指令，对应arm里的`fmls`;还睿智的没有覆盖被乘数的浮点乘累减取负指令，所以单独算浮点数的时候，需要四个参数。上述三个指令的对应含义如下：
 
 ```c
-fd = -(fs1*fs2 - fs3) = fs3 - fs1*fs2
-vd[i] = -(fs1*vd[i]) + vs2[i]
-vd[i] = -(vs1[i]*vd[i]) + vs2[i]
+fd 		= 	-(fs1*fs2 - fs3) = fs3 - fs1*fs2
+vd[i] 	= 	-(fs1*vd[i]) + vs2[i]
+vd[i] 	= 	-(vs1[i]*vd[i]) + vs2[i]
 ```
 
 ## ext
