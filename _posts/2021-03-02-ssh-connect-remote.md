@@ -102,7 +102,7 @@ Host anything
    可以使用如下指令复制：
 
    ```bash
-   ssh-copy-id Remote@Hostname -p Port
+   ssh-copy-id -p Port Remote@Hostname
    ```
 
    之后输入Remote的密码。
