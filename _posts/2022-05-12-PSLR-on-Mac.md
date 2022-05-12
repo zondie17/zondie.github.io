@@ -37,7 +37,7 @@ LR相比于PS就没有那么多资源了，安装过程中出现了挺多问题�
 
 最后山穷水尽时，发现在www.macat.vip上找到了免费的LR，感动。不过2022的v11.3似乎只支持M1；只能退而求其次安装了2021的v10.4版，虽然用起来似乎不是非常的稳定，不过目前看起来还算ok。
 
-<img src="https://zondie17.github.io/img/2022-05-12/ps.png" style="zoom:50%;" />
+<img src="https://zondie17.github.io/img/2022-05-12/lr.png" style="zoom:50%;" />
 
 ## DR5
 
